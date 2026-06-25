@@ -1,0 +1,27 @@
+{
+  "name": "osmotix",
+  "version": "1.0.0",
+  "description": "OSM (Osmotix) — Fixed-supply ERC-20 token on Base network",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "test:gas": "REPORT_GAS=true hardhat test",
+    "coverage": "hardhat coverage",
+    "deploy:local": "hardhat run scripts/deploy.js --network hardhat",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network base-sepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network base",
+    "verify": "hardhat verify --network base",
+    "node": "hardhat node",
+    "clean": "hardhat clean"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.10",
+    "hardhat": "^2.22.0",
+    "dotenv": "^16.4.5"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
+  }
+}
