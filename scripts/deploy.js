@@ -1,6 +1,6 @@
 const { ethers, network, run } = require("hardhat");
 
-const TREASURY_ADDRESS = "0xcfCDD0108E4B6b344c04EF98e47b54de2F2Bc8F8";
+const TREASURY_ADDRESS = "0x05e768f996E746a7fBc6670080e993edAc50eB59";
 
 // ─── Formatting helpers ──────────────────────────────────────────────────────
 
