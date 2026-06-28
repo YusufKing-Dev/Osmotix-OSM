@@ -3,8 +3,8 @@ require("dotenv").config();
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "0x" + "0".repeat(64);
 const BASESCAN_API_KEY = process.env.BASESCAN_API_KEY || "";
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "";
 
-/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
     version: "0.8.20",
@@ -18,12 +18,11 @@ module.exports = {
   },
 
   networks: {
-    // Local development
     hardhat: {
       chainId: 31337,
     },
 
-    // Base Mainnet
+    // Base Mainnet (for real deployment)
     base: {
       url: process.env.BASE_RPC_URL || "https://mainnet.base.org",
       chainId: 8453,
@@ -31,10 +30,10 @@ module.exports = {
       gasPrice: "auto",
     },
 
-    // Base Sepolia Testnet
+    // Ethereum Sepolia (for testing)
     "base-sepolia": {
-      url: process.env.BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org",
-      chainId: 84532,
+      url: process.env.BASE_SEPOLIA_RPC_URL || "https://rpc.sepolia.org",
+      chainId: 11155111,
       accounts: [PRIVATE_KEY],
       gasPrice: "auto",
     },
@@ -43,35 +42,8 @@ module.exports = {
   etherscan: {
     apiKey: {
       base: BASESCAN_API_KEY,
-      "base-sepolia": BASESCAN_API_KEY,
+      sepolia: ETHERSCAN_API_KEY,
     },
-    customChains: [
-      {
-        network: "base",
-        chainId: 8453,
-        urls: {
-          apiURL: "https://api.basescan.org/api",
-          browserURL: "https://basescan.org",
-        },
-      },
-      {
-        network: "base-sepolia",
-        chainId: 84532,
-        urls: {
-          apiURL: "https://api-sepolia.basescan.org/api",
-          browserURL: "https://sepolia.basescan.org",
-        },
-      },
-    ],
-  },
-
-  gasReporter: {
-    enabled: process.env.REPORT_GAS === "true",
-    currency: "USD",
-    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-    token: "ETH",
-    gasPriceApi:
-      "https://api.etherscan.io/api?module=proxy&action=eth_gasPrice",
   },
 
   paths: {
