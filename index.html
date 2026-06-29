@@ -410,6 +410,7 @@
     }
     .social-icon-tg { background: rgba(79,142,247,0.15); color: var(--accent); }
     .social-icon-x  { background: rgba(232,234,242,0.1); color: var(--text); }
+    .social-icon svg { display: block; }
 
     .social-meta { flex: 1; }
     .social-name { font-weight: 700; font-size: 14px; }
@@ -551,11 +552,9 @@
     <h1>OSM — Osmotix</h1>
     <p>Fixed-supply digital asset on Base. Transparent issuance. Predictable scarcity. No surprises.</p>
     <div class="hero-actions">
-      <a href="https://basescan.org/token/0xcfCDD0108E4B6b344c04EF98e47b54de2F2Bc8F8" target="_blank">
-        <button class="btn btn-primary">View on Basescan</button>
-      </a>
+      <button class="btn btn-disabled" disabled title="Contract address is TBA">View on Basescan — Coming soon</button>
       <button class="btn btn-outline" id="open-whitepaper">Read Whitepaper</button>
-      <a href="https://github.com/your-org/osmotix" target="_blank">
+      <a href="https://github.com/YusufKing-Dev/Osmotix-OSM" target="_blank">
         <button class="btn btn-outline">GitHub →</button>
       </a>
     </div>
@@ -648,10 +647,7 @@
     <div class="info-grid">
       <div class="info-row">
         <span class="info-key">Contract Address</span>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <span class="info-val">0xcfCDD0108E4B6b344c04EF98e47b54de2F2Bc8F8</span>
-          <button class="copy-btn" onclick="copy('0xcfCDD0108E4B6b344c04EF98e47b54de2F2Bc8F8', this)">⎘</button>
-        </div>
+        <span class="info-val" style="font-family:inherit;color:var(--muted);">TBA</span>
       </div>
       <div class="info-row">
         <span class="info-key">Network</span>
@@ -726,7 +722,11 @@
     <h2>Community</h2>
     <div class="social-grid reveal-stagger reveal">
       <a class="social-card" href="https://t.me/Osmotix_onbase" target="_blank" rel="noopener">
-        <div class="social-icon social-icon-tg">✈️</div>
+        <div class="social-icon social-icon-tg">
+          <svg viewBox="0 0 240 240" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M109.6 153.3l-4.4 62.1c6.3 0 9-2.7 12.3-6l29.5-28.2 61.2 44.7c11.2 6.2 19.3 2.9 22.1-10.4l40.1-188.2.1-.1c3.3-15.4-5.6-21.4-16.5-17.4L17.4 105.5C2.5 111.2 2.7 119.4 14.9 123.1l59.9 18.7L213.4 51.4c6.5-4.3 12.4-1.9 7.5 2.4l-111.3 99.5z" fill="currentColor" transform="scale(0.83)"/>
+          </svg>
+        </div>
         <div class="social-meta">
           <div class="social-name">Telegram</div>
           <div class="social-handle">t.me/Osmotix_onbase</div>
@@ -734,7 +734,11 @@
         <div class="social-arrow">↗</div>
       </a>
       <a class="social-card" href="https://x.com/osmotix_onbase?s=21" target="_blank" rel="noopener">
-        <div class="social-icon social-icon-x">𝕏</div>
+        <div class="social-icon social-icon-x">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </div>
         <div class="social-meta">
           <div class="social-name">X (Twitter)</div>
           <div class="social-handle">@osmotix_onbase</div>
@@ -748,8 +752,8 @@
 
 <footer>
   Osmotix (OSM) — Version 1.1 · Built on Base ·
-  <a href="https://basescan.org/token/0xcfCDD0108E4B6b344c04EF98e47b54de2F2Bc8F8" target="_blank">Basescan</a> ·
-  <a href="https://github.com/your-org/osmotix" target="_blank">GitHub</a> ·
+  <span style="color:var(--muted);">Basescan (coming soon)</span> ·
+  <a href="https://github.com/YusufKing-Dev/Osmotix-OSM" target="_blank">GitHub</a> ·
   <a href="https://t.me/Osmotix_onbase" target="_blank">Telegram</a> ·
   <a href="https://x.com/osmotix_onbase?s=21" target="_blank">X</a>
 </footer>
