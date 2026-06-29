@@ -21,6 +21,8 @@
     /* ── Reset & Base ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html { scroll-behavior: smooth; }
+
     body {
       background: var(--bg);
       color: var(--text);
@@ -28,6 +30,7 @@
       font-size: 15px;
       line-height: 1.6;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     a { color: var(--accent); text-decoration: none; }
@@ -58,10 +61,15 @@
 
     .logo-icon {
       width: 32px; height: 32px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
       border-radius: 8px;
+      overflow: hidden;
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .logo-icon img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .badge {
@@ -92,13 +100,54 @@
       font-weight: 600;
       cursor: pointer;
       border: none;
-      transition: opacity 0.15s;
+      transition: opacity 0.15s, transform 0.15s;
+      font-family: inherit;
     }
     .btn:hover { opacity: 0.85; }
+    .btn:active { transform: scale(0.97); }
     .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
     .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-disabled {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+    .btn-disabled:hover { opacity: 1; }
 
     main { max-width: 1060px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    /* ── Scroll fade-in animation ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1),
+                  transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+      will-change: opacity, transform;
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-stagger > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1),
+                  transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .reveal-stagger.is-visible > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal, .reveal-stagger > * {
+        opacity: 1 !important;
+        transform: none !important;
+        transition: none !important;
+      }
+    }
 
     /* ── Hero ── */
     .hero {
@@ -147,9 +196,9 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 22px 24px;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, transform 0.2s;
     }
-    .stat-card:hover { border-color: var(--accent); }
+    .stat-card:hover { border-color: var(--accent); transform: translateY(-2px); }
 
     .stat-label {
       font-size: 12px;
@@ -319,11 +368,135 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 20px;
+      transition: transform 0.2s, border-color 0.2s;
     }
+    .principle-card:hover { transform: translateY(-2px); border-color: var(--accent2); }
 
     .principle-icon { font-size: 22px; margin-bottom: 10px; }
     .principle-title { font-weight: 700; font-size: 14px; margin-bottom: 6px; }
     .principle-body  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Social Section ── */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .social-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.2s, transform 0.2s;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .social-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      text-decoration: none;
+    }
+
+    .social-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      font-size: 20px;
+    }
+    .social-icon-tg { background: rgba(79,142,247,0.15); color: var(--accent); }
+    .social-icon-x  { background: rgba(232,234,242,0.1); color: var(--text); }
+
+    .social-meta { flex: 1; }
+    .social-name { font-weight: 700; font-size: 14px; }
+    .social-handle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+    .social-arrow { color: var(--muted); font-size: 16px; }
+
+    /* ── Whitepaper Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,6,10,0.78);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 86vh;
+      overflow-y: auto;
+      transform: translateY(16px) scale(0.98);
+      transition: transform 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    .modal-overlay.is-open .modal-panel {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 1;
+    }
+
+    .modal-title { font-size: 17px; font-weight: 700; }
+
+    .modal-close {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .modal-close:hover { color: var(--text); border-color: var(--accent); }
+
+    .modal-body { padding: 24px; }
+    .modal-page { margin-bottom: 20px; }
+    .modal-page:last-child { margin-bottom: 0; }
+    .modal-page img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .modal-page-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    body.modal-open { overflow: hidden; }
 
     /* ── Footer ── */
     footer {
@@ -349,7 +522,9 @@
 <!-- ── Header ── -->
 <header>
   <div class="logo">
-    <div class="logo-icon">⬡</div>
+    <div class="logo-icon">
+      <img src="https://res.cloudinary.com/drdrwbdkp/image/upload/v1782729556/IMG_20260629_113854_625_vj4gfx.jpg" alt="Osmotix logo" />
+    </div>
     Osmotix
     <span class="badge badge-base">Base</span>
     <span class="badge badge-net">ERC-20</span>
@@ -360,12 +535,11 @@
     <a href="#schedule">Schedule</a>
     <a href="#contract">Contract</a>
     <a href="#principles">Principles</a>
+    <a href="#social">Community</a>
   </nav>
 
   <div style="display:flex;gap:8px;">
-    <a href="https://basescan.org/token/0xcfCDD0108E4B6b344c04EF98e47b54de2F2Bc8F8" target="_blank">
-      <button class="btn btn-outline">Basescan ↗</button>
-    </a>
+    <button class="btn btn-disabled" disabled title="BscScan listing is coming soon">BscScan — Coming soon</button>
   </div>
 </header>
 
@@ -373,13 +547,14 @@
 <main>
 
   <!-- Hero -->
-  <div class="hero">
+  <div class="hero reveal">
     <h1>OSM — Osmotix</h1>
     <p>Fixed-supply digital asset on Base. Transparent issuance. Predictable scarcity. No surprises.</p>
     <div class="hero-actions">
       <a href="https://basescan.org/token/0xcfCDD0108E4B6b344c04EF98e47b54de2F2Bc8F8" target="_blank">
         <button class="btn btn-primary">View on Basescan</button>
       </a>
+      <button class="btn btn-outline" id="open-whitepaper">Read Whitepaper</button>
       <a href="https://github.com/your-org/osmotix" target="_blank">
         <button class="btn btn-outline">GitHub →</button>
       </a>
@@ -387,7 +562,7 @@
   </div>
 
   <!-- Stat Grid -->
-  <div class="stat-grid">
+  <div class="stat-grid reveal-stagger reveal">
     <div class="stat-card">
       <div class="stat-label">Maximum Supply</div>
       <div class="stat-value">430M</div>
@@ -411,7 +586,7 @@
   </div>
 
   <!-- Supply Breakdown -->
-  <section id="supply">
+  <section id="supply" class="reveal">
     <h2>Supply Distribution</h2>
     <div class="supply-bar-wrap">
       <div class="supply-bar">
@@ -447,7 +622,7 @@
   </section>
 
   <!-- Release Schedule -->
-  <section id="schedule">
+  <section id="schedule" class="reveal">
     <h2>Release Schedule</h2>
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
       <table class="schedule-table">
@@ -468,7 +643,7 @@
   </section>
 
   <!-- Contract Info -->
-  <section id="contract">
+  <section id="contract" class="reveal">
     <h2>Contract Details</h2>
     <div class="info-grid">
       <div class="info-row">
@@ -510,9 +685,9 @@
   </section>
 
   <!-- Security Principles -->
-  <section id="principles">
+  <section id="principles" class="reveal">
     <h2>Security Principles</h2>
-    <div class="principles">
+    <div class="principles reveal-stagger reveal">
       <div class="principle-card">
         <div class="principle-icon">🔒</div>
         <div class="principle-title">Fixed Supply</div>
@@ -546,13 +721,58 @@
     </div>
   </section>
 
+  <!-- Social / Community -->
+  <section id="social" class="reveal">
+    <h2>Community</h2>
+    <div class="social-grid reveal-stagger reveal">
+      <a class="social-card" href="https://t.me/Osmotix_onbase" target="_blank" rel="noopener">
+        <div class="social-icon social-icon-tg">✈️</div>
+        <div class="social-meta">
+          <div class="social-name">Telegram</div>
+          <div class="social-handle">t.me/Osmotix_onbase</div>
+        </div>
+        <div class="social-arrow">↗</div>
+      </a>
+      <a class="social-card" href="https://x.com/osmotix_onbase?s=21" target="_blank" rel="noopener">
+        <div class="social-icon social-icon-x">𝕏</div>
+        <div class="social-meta">
+          <div class="social-name">X (Twitter)</div>
+          <div class="social-handle">@osmotix_onbase</div>
+        </div>
+        <div class="social-arrow">↗</div>
+      </a>
+    </div>
+  </section>
+
 </main>
 
 <footer>
   Osmotix (OSM) — Version 1.1 · Built on Base ·
   <a href="https://basescan.org/token/0xcfCDD0108E4B6b344c04EF98e47b54de2F2Bc8F8" target="_blank">Basescan</a> ·
-  <a href="https://github.com/your-org/osmotix" target="_blank">GitHub</a>
+  <a href="https://github.com/your-org/osmotix" target="_blank">GitHub</a> ·
+  <a href="https://t.me/Osmotix_onbase" target="_blank">Telegram</a> ·
+  <a href="https://x.com/osmotix_onbase?s=21" target="_blank">X</a>
 </footer>
+
+<!-- ── Whitepaper Modal ── -->
+<div class="modal-overlay" id="whitepaper-modal" aria-hidden="true">
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Osmotix Whitepaper</div>
+      <button class="modal-close" id="close-whitepaper" aria-label="Close whitepaper">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-page">
+        <div class="modal-page-label">Page 1</div>
+        <img src="whitepaper/1.png" alt="Osmotix whitepaper page 1" />
+      </div>
+      <div class="modal-page">
+        <div class="modal-page-label">Page 2</div>
+        <img src="whitepaper/2.png" alt="Osmotix whitepaper page 2" />
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
   // ── Schedule data ──────────────────────────────────────────────────────────
@@ -596,6 +816,45 @@
       setTimeout(() => btn.textContent = orig, 1500);
     });
   }
+
+  // ── Scroll fade-in reveal ──────────────────────────────────────────────────
+  const revealEls = document.querySelectorAll(".reveal");
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+
+  revealEls.forEach((el) => revealObserver.observe(el));
+
+  // ── Whitepaper modal ───────────────────────────────────────────────────────
+  const modal       = document.getElementById("whitepaper-modal");
+  const openBtn      = document.getElementById("open-whitepaper");
+  const closeBtn      = document.getElementById("close-whitepaper");
+
+  function openModal() {
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+  }
+
+  function closeModal() {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+  }
+
+  openBtn.addEventListener("click", openModal);
+  closeBtn.addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+  });
 </script>
 </body>
 </html>
