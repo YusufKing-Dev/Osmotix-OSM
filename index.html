@@ -42,7 +42,8 @@
     "sameAs": [
       "https://t.me/Osmotix_onbase",
       "https://x.com/osmotix_onbase",
-      "https://github.com/YusufKing-Dev/Osmotix-OSM"
+      "https://github.com/YusufKing-Dev/Osmotix-OSM",
+      "https://basescan.org/token/0xf13ad6eAD69fb561049bf21449b79039589651a9"
     ]
   }
   </script>
@@ -642,7 +643,9 @@
   </nav>
 
   <div style="display:flex;gap:8px;">
-    <button class="btn btn-disabled" disabled title="BscScan listing is coming soon">BscScan — Coming soon</button>
+    <a href="https://basescan.org/token/0xf13ad6eAD69fb561049bf21449b79039589651a9" target="_blank" rel="noopener">
+      <button class="btn btn-outline">View on Basescan</button>
+    </a>
   </div>
 </header>
 
@@ -654,7 +657,9 @@
     <h1>OSM — Osmotix</h1>
     <p>Fixed-supply digital asset on Base. Transparent issuance. Predictable scarcity. No surprises.</p>
     <div class="hero-actions">
-      <button class="btn btn-disabled" disabled title="Contract address is TBA">View on Basescan — Coming soon</button>
+      <a href="https://basescan.org/token/0xf13ad6eAD69fb561049bf21449b79039589651a9" target="_blank" rel="noopener">
+        <button class="btn btn-primary">View on Basescan</button>
+      </a>
       <button class="btn btn-outline" id="open-whitepaper">Read Whitepaper</button>
       <a href="https://github.com/YusufKing-Dev/Osmotix-OSM" target="_blank">
         <button class="btn btn-outline">GitHub →</button>
@@ -751,7 +756,10 @@
     <div class="info-grid">
       <div class="info-row">
         <span class="info-key">Contract Address</span>
-        <span class="info-val" style="font-family:inherit;color:var(--muted);">TBA</span>
+        <span class="info-val">
+          0xf13ad6eAD69fb561049bf21449b79039589651a9
+          <button class="copy-btn" onclick="copy('0xf13ad6eAD69fb561049bf21449b79039589651a9', this)" aria-label="Copy contract address">⧉</button>
+        </span>
       </div>
       <div class="info-row">
         <span class="info-key">Network</span>
@@ -780,6 +788,12 @@
       <div class="info-row">
         <span class="info-key">Compiler</span>
         <span class="info-val">Solidity 0.8.20 · OpenZeppelin 5</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">View on Explorer</span>
+        <span class="info-val" style="font-family:inherit;">
+          <a href="https://basescan.org/token/0xf13ad6eAD69fb561049bf21449b79039589651a9" target="_blank" rel="noopener">Basescan ↗</a>
+        </span>
       </div>
     </div>
   </section>
@@ -856,7 +870,7 @@
 
 <footer>
   Osmotix (OSM) — Version 1.1 · Built on Base ·
-  <span style="color:var(--muted);">Basescan (coming soon)</span> ·
+  <a href="https://basescan.org/token/0xf13ad6eAD69fb561049bf21449b79039589651a9" target="_blank">Basescan</a> ·
   <a href="https://github.com/YusufKing-Dev/Osmotix-OSM" target="_blank">GitHub</a> ·
   <a href="https://t.me/Osmotix_onbase" target="_blank">Telegram</a> ·
   <a href="https://x.com/osmotix_onbase?s=21" target="_blank">X</a>
@@ -884,8 +898,8 @@
 
 <script>
   // ── Schedule data ──────────────────────────────────────────────────────────
-  // Using a placeholder deployment date; replace with real deployedAt timestamp.
-  const DEPLOY_TS   = Date.now();  // Replace with actual deployed timestamp × 1000
+  // Real deployment timestamp (Unix seconds): 1782642852 → 2026-06-28
+  const DEPLOY_TS   = 1782642852 * 1000;
   const YEAR_MS     = 365 * 24 * 3600 * 1000;
   const now         = Date.now();
 
