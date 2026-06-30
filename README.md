@@ -15,7 +15,7 @@ OSM (Osmotix) is a fixed-supply digital asset built on the [Base](https://base.o
 
 | Property | Value |
 |---|---|
-| **Contract** | `0xF13ad6eAD69FB561049BF21449b79039589651a9` |
+| **Contract** | `0xf13ad6eAD69fb561049bf21449b79039589651a9` |
 | **Network** | Base (Chain ID 8453) |
 | **Standard** | ERC-20 |
 | **Name / Symbol** | Osmotix / OSM |
