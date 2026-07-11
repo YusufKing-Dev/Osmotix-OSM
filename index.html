@@ -1454,7 +1454,7 @@
         return;
       } catch (e) {
         status.className = "presale-status error";
-        status.textContent = "Failed to connect wallet.";
+        status.textContent = e.code === 4001 ? "Connection request rejected." : describeTxError(e);
         return;
       }
     }
@@ -1470,6 +1470,17 @@
       btn.disabled = true;
       btn.textContent = "Processing...";
       status.className = "presale-status";
+      status.textContent = "Checking presale status...";
+
+      const open = await readContract.isPresaleOpen().catch(() => null);
+      if (open === false) {
+        status.className = "presale-status error";
+        status.textContent = "Presale is not currently open (not yet activated, ended, or sold out).";
+        btn.textContent = "Buy OSM";
+        btn.disabled = false;
+        return;
+      }
+
       status.textContent = "Confirm the transaction in your wallet...";
 
       const writeContract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, signer);
@@ -1482,11 +1493,46 @@
       tx.wait().then(() => loadPresaleData());
     } catch (e) {
       status.className = "presale-status error";
-      status.textContent = (e.code === 4001 || e.code === "ACTION_REJECTED") ? "Transaction cancelled." : "Transaction failed. Please try again.";
+      status.textContent = describeTxError(e);
       btn.textContent = "Buy OSM";
     } finally {
       btn.disabled = false;
     }
+  }
+
+  // Pulls the most useful human-readable reason out of an ethers/RPC error object.
+  // Wallets and nodes nest the real revert reason in different places depending on
+  // the provider, so this checks them in order of specificity.
+  function describeTxError(e) {
+    if (e.code === 4001 || e.code === "ACTION_REJECTED") {
+      return "Transaction cancelled.";
+    }
+    if (e.code === "INSUFFICIENT_FUNDS" || /insufficient funds/i.test(e.message || "")) {
+      return "Insufficient ETH balance to cover the amount plus gas.";
+    }
+
+    // Contract require()/revert reasons show up here when ethers can parse them.
+    const reason =
+      e.reason ||
+      e.error?.data?.message ||
+      e.error?.message ||
+      e.data?.message ||
+      (typeof e.data === "string" ? e.data : null);
+
+    if (reason) {
+      // Strip common ethers/node prefixes like "execution reverted: " for a cleaner message.
+      const cleaned = reason.replace(/^execution reverted:?\s*/i, "").trim();
+      if (cleaned) return `Transaction failed: ${cleaned}`;
+    }
+
+    if (e.code === "CALL_EXCEPTION") {
+      return "Transaction failed: the contract rejected this call (presale may be closed, sold out, or not yet active).";
+    }
+    if (e.code === "NETWORK_ERROR" || e.code === "TIMEOUT") {
+      return "Network error — check your connection and that your wallet is on Base, then try again.";
+    }
+
+    return e.message ? `Transaction failed: ${e.message.slice(0, 120)}` : "Transaction failed. Please try again.";
   }
 
   detectWallet();
