@@ -1507,8 +1507,8 @@
     if (e.code === 4001 || e.code === "ACTION_REJECTED") {
       return "Transaction cancelled.";
     }
-    if (e.code === "INSUFFICIENT_FUNDS" || /insufficient funds/i.test(e.message || "")) {
-      return "Insufficient ETH balance to cover the amount plus gas.";
+    if (e.code === "INSUFFICIENT_FUNDS" || /insufficient funds|outoffunds/i.test(e.message || "") || /outoffunds/i.test(e.reason || "")) {
+      return "Insufficient ETH balance to cover the amount plus gas fees.";
     }
 
     // Contract require()/revert reasons show up here when ethers can parse them.
