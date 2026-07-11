@@ -1466,14 +1466,15 @@
     const btn    = document.getElementById("ps-buy-btn");
     const status = document.getElementById("ps-status");
 
-    // State 1: not connected yet.
+    // Step 1: connect if needed. eth_requestAccounts pops up a prompt only the
+    // first time; if already approved it resolves instantly, so we fall straight
+    // through to the next step instead of stopping here.
     if (!walletConnected) {
       try {
         status.className = "presale-status";
         status.textContent = "Connecting wallet...";
         await window.ethereum.request({ method: "eth_requestAccounts" });
         await refreshWalletUI();
-        return;
       } catch (e) {
         status.className = "presale-status error";
         status.textContent = e.code === 4001 ? "Connection request rejected." : describeTxError(e);
@@ -1481,7 +1482,7 @@
       }
     }
 
-    // State 2: connected but on the wrong chain — never proceed to a buy from here.
+    // Step 2: ensure Base network before continuing in the same click.
     if (!(await isOnBase())) {
       status.className = "presale-status";
       status.textContent = "Switching to Base network...";
@@ -1490,11 +1491,11 @@
       if (!switched || !(await isOnBase())) {
         status.className = "presale-status error";
         status.textContent = "Please switch your wallet to Base network to continue.";
+        return;
       }
-      return;
     }
 
-    // State 3: connected and on Base — proceed to buy.
+    // Step 3: validate input.
     const ethVal = parseFloat(document.getElementById("ps-eth-input").value);
     if (!ethVal || ethVal <= 0) {
       status.className = "presale-status error";
@@ -1502,6 +1503,8 @@
       return;
     }
 
+    // Step 4: check the contract is actually open, then send the transaction —
+    // this is the point where the wallet should show the signature/confirm prompt.
     try {
       btn.disabled = true;
       btn.textContent = "Processing...";
@@ -1519,6 +1522,10 @@
 
       status.textContent = "Confirm the transaction in your wallet...";
 
+      if (!signer) {
+        browserProvider = new ethers.providers.Web3Provider(window.ethereum);
+        signer = browserProvider.getSigner();
+      }
       const writeContract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, signer);
       const tx = await writeContract.buyOSM({ value: ethers.utils.parseEther(ethVal.toString()) });
 
