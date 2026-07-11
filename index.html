@@ -557,6 +557,225 @@
       color: var(--muted);
     }
 
+    /* ── Presale ── */
+    .presale-card {
+      background: linear-gradient(135deg, #0d1628 0%, #111420 100%);
+      border: 1px solid var(--accent);
+      border-radius: 16px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .presale-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(79,142,247,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .presale-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(61,214,140,0.15);
+      color: var(--green);
+      border: 1px solid rgba(61,214,140,0.3);
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .presale-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .presale-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .presale-stat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      text-align: center;
+    }
+
+    .presale-stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .presale-stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .presale-progress-wrap {
+      margin: 20px 0;
+    }
+
+    .presale-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .presale-progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 100px;
+      overflow: hidden;
+    }
+
+    .presale-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 100px;
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+
+    .presale-buy-box {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .presale-input-wrap {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .presale-input {
+      flex: 1;
+      min-width: 120px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .presale-input:focus { border-color: var(--accent); }
+
+    .presale-output {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 14px;
+      min-height: 20px;
+    }
+
+    .presale-output span {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .btn-presale {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      font-family: inherit;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-presale:hover { opacity: 0.88; }
+    .btn-presale:active { transform: scale(0.98); }
+    .btn-presale:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .presale-status {
+      font-size: 13px;
+      text-align: center;
+      margin-top: 10px;
+      min-height: 20px;
+      color: var(--muted);
+    }
+
+    .presale-status.success { color: var(--green); }
+    .presale-status.error   { color: #f75a5a; }
+
+    .presale-timer {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    .timer-block {
+      text-align: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 16px;
+      min-width: 60px;
+    }
+
+    .timer-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -1px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .presale-disclaimer {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 14px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .hero h1 { letter-spacing: -1px; }
@@ -613,6 +832,12 @@
       .modal-header { padding: 14px 16px; }
       .modal-title { font-size: 15px; }
       .modal-body { padding: 16px; }
+
+      .presale-card { padding: 20px; }
+      .presale-stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .presale-stat { padding: 12px; }
+      .presale-stat-value { font-size: 15px; }
+      .timer-value { font-size: 20px; }
     }
 
     @media (max-width: 380px) {
@@ -638,6 +863,7 @@
     <a href="#supply">Supply</a>
     <a href="#schedule">Schedule</a>
     <a href="#contract">Contract</a>
+    <a href="#presale">Presale</a>
     <a href="#principles">Principles</a>
     <a href="#social">Community</a>
   </nav>
@@ -798,6 +1024,76 @@
     </div>
   </section>
 
+  <!-- Presale -->
+  <section id="presale" class="reveal">
+    <h2>Presale — Live Now</h2>
+    <div class="presale-card">
+      <div class="presale-live-badge">
+        <div class="presale-live-dot"></div>
+        Live
+      </div>
+
+      <p style="color:var(--muted);font-size:14px;margin-bottom:4px;">
+        Buy OSM directly from the verified presale contract before public listing.
+      </p>
+
+      <!-- Stats -->
+      <div class="presale-stats">
+        <div class="presale-stat">
+          <div class="presale-stat-label">Price</div>
+          <div class="presale-stat-value" style="font-size:15px;">0.000016 ETH</div>
+        </div>
+        <div class="presale-stat">
+          <div class="presale-stat-label">Allocation</div>
+          <div class="presale-stat-value">25.8M</div>
+        </div>
+        <div class="presale-stat">
+          <div class="presale-stat-label">Remaining</div>
+          <div class="presale-stat-value" id="ps-remaining">—</div>
+        </div>
+        <div class="presale-stat">
+          <div class="presale-stat-label">Raised</div>
+          <div class="presale-stat-value" id="ps-raised">—</div>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="presale-progress-wrap">
+        <div class="presale-progress-label">
+          <span>Sold</span>
+          <span id="ps-pct">0%</span>
+        </div>
+        <div class="presale-progress-bar">
+          <div class="presale-progress-fill" id="ps-fill"></div>
+        </div>
+      </div>
+
+      <!-- Countdown -->
+      <div class="presale-timer">
+        <div class="timer-block"><div class="timer-value" id="t-days">--</div><div class="timer-label">Days</div></div>
+        <div class="timer-block"><div class="timer-value" id="t-hours">--</div><div class="timer-label">Hours</div></div>
+        <div class="timer-block"><div class="timer-value" id="t-mins">--</div><div class="timer-label">Mins</div></div>
+        <div class="timer-block"><div class="timer-value" id="t-secs">--</div><div class="timer-label">Secs</div></div>
+      </div>
+
+      <!-- Buy box -->
+      <div class="presale-buy-box">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">Enter ETH amount to buy OSM</div>
+        <div class="presale-input-wrap">
+          <input class="presale-input" id="ps-eth-input" type="number" step="0.001" min="0" placeholder="ETH amount (e.g. 0.01)" />
+        </div>
+        <div class="presale-output" id="ps-osm-output">Enter an ETH amount to see how much OSM you get</div>
+        <button class="btn-presale" id="ps-buy-btn" onclick="presaleBuy()">Connect Wallet to Buy</button>
+        <div class="presale-status" id="ps-status"></div>
+        <div class="presale-disclaimer">
+          This sends ETH directly to the presale contract below. Always verify the address on
+          <a href="https://basescan.org/address/0x93CDc97A09438f2bc28f63EE6C343D9f904A6E62" target="_blank" rel="noopener">Basescan</a>
+          before sending funds. Contract: <span style="font-family:monospace;">0x93CD...6E62</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Security Principles -->
   <section id="principles" class="reveal">
     <h2>Security Principles</h2>
@@ -869,7 +1165,7 @@
 </main>
 
 <footer>
-  Osmotix (OSM) — Version 1.1 · Built on Base ·
+  Osmotix (OSM) — Version 1.2 · Built on Base ·
   <a href="https://basescan.org/token/0xf13ad6eAD69fb561049bf21449b79039589651a9" target="_blank">Basescan</a> ·
   <a href="https://github.com/YusufKing-Dev/Osmotix-OSM" target="_blank">GitHub</a> ·
   <a href="https://t.me/Osmotix_onbase" target="_blank">Telegram</a> ·
@@ -895,6 +1191,9 @@
     </div>
   </div>
 </div>
+
+<!-- ethers.js — used for ABI-based contract reads/writes instead of raw hex selectors -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 
 <script>
   // ── Schedule data ──────────────────────────────────────────────────────────
@@ -977,6 +1276,170 @@
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
   });
+
+  // ── Presale ────────────────────────────────────────────────────────────────
+  // ABI matches the deployed OSMPresale.sol exactly — no raw hex selectors.
+  const PRESALE_ADDRESS = "0x93CDc97A09438f2bc28f63EE6C343D9f904A6E62";
+  const PRICE_PER_OSM   = 0.000016;     // ETH per OSM
+  const TOTAL_ALLOC     = 25_800_000;   // OSM
+  const BASE_CHAIN_ID   = "0x2105";     // Base Mainnet = 8453
+  const BASE_RPC        = "https://mainnet.base.org";
+
+  const PRESALE_ABI = [
+    "function buyOSM() external payable",
+    "function remainingOSM() external view returns (uint256)",
+    "function totalSold() external view returns (uint256)",
+    "function totalRaised() external view returns (uint256)",
+    "function presaleEnd() external view returns (uint256)",
+    "function isPresaleOpen() external view returns (bool)"
+  ];
+
+  let browserProvider, signer, walletConnected = false;
+
+  // Read-only provider — always works, no wallet required, used to populate stats.
+  const readProvider = new ethers.providers.JsonRpcProvider(BASE_RPC);
+  const readContract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, readProvider);
+
+  async function loadPresaleData() {
+    try {
+      const [remainingRaw, raisedRaw, endRaw, soldRaw] = await Promise.all([
+        readContract.remainingOSM(),
+        readContract.totalRaised(),
+        readContract.presaleEnd(),
+        readContract.totalSold()
+      ]);
+
+      const remaining = parseFloat(ethers.utils.formatUnits(remainingRaw, 18));
+      const raised    = parseFloat(ethers.utils.formatUnits(raisedRaw, 18));
+      const sold      = parseFloat(ethers.utils.formatUnits(soldRaw, 18));
+      const endTs     = endRaw.toNumber();
+      const pct       = Math.min(100, (sold / TOTAL_ALLOC) * 100).toFixed(1);
+
+      document.getElementById("ps-remaining").textContent = remaining > 0 ? (remaining / 1e6).toFixed(2) + "M" : "Sold Out";
+      document.getElementById("ps-raised").textContent    = raised.toFixed(4) + " ETH";
+      document.getElementById("ps-pct").textContent       = pct + "%";
+      document.getElementById("ps-fill").style.width      = pct + "%";
+
+      startCountdown(endTs);
+    } catch (e) {
+      console.warn("Could not load presale data:", e);
+    }
+  }
+
+  function startCountdown(endTs) {
+    function tick() {
+      const nowS = Math.floor(Date.now() / 1000);
+      const diff = endTs - nowS;
+      if (diff <= 0) {
+        ["t-days","t-hours","t-mins","t-secs"].forEach(id => document.getElementById(id).textContent = "00");
+        return;
+      }
+      const d = Math.floor(diff / 86400);
+      const h = Math.floor((diff % 86400) / 3600);
+      const m = Math.floor((diff % 3600) / 60);
+      const s = diff % 60;
+      document.getElementById("t-days").textContent  = String(d).padStart(2,"0");
+      document.getElementById("t-hours").textContent = String(h).padStart(2,"0");
+      document.getElementById("t-mins").textContent  = String(m).padStart(2,"0");
+      document.getElementById("t-secs").textContent  = String(s).padStart(2,"0");
+      setTimeout(tick, 1000);
+    }
+    tick();
+  }
+
+  document.getElementById("ps-eth-input").addEventListener("input", function() {
+    const eth = parseFloat(this.value);
+    const out = document.getElementById("ps-osm-output");
+    if (!eth || eth <= 0) {
+      out.innerHTML = "Enter an ETH amount to see how much OSM you get";
+      return;
+    }
+    const osm = Math.floor(eth / PRICE_PER_OSM);
+    out.innerHTML = `You receive <span>${osm.toLocaleString()} OSM</span> for ${eth} ETH`;
+  });
+
+  async function presaleBuy() {
+    const btn    = document.getElementById("ps-buy-btn");
+    const status = document.getElementById("ps-status");
+
+    if (!walletConnected) {
+      if (!window.ethereum) {
+        status.className = "presale-status error";
+        status.textContent = "No wallet detected. Please install MetaMask or another browser wallet.";
+        return;
+      }
+      try {
+        status.className = "presale-status";
+        status.textContent = "Connecting wallet...";
+
+        browserProvider = new ethers.providers.Web3Provider(window.ethereum);
+        await browserProvider.send("eth_requestAccounts", []);
+
+        try {
+          await window.ethereum.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: BASE_CHAIN_ID }]
+          });
+        } catch (switchErr) {
+          if (switchErr.code === 4902) {
+            await window.ethereum.request({
+              method: "wallet_addEthereumChain",
+              params: [{
+                chainId: BASE_CHAIN_ID,
+                chainName: "Base",
+                nativeCurrency: { name: "Ethereum", symbol: "ETH", decimals: 18 },
+                rpcUrls: [BASE_RPC],
+                blockExplorerUrls: ["https://basescan.org"]
+              }]
+            });
+          }
+        }
+
+        signer = browserProvider.getSigner();
+        walletConnected = true;
+        btn.textContent = "Buy OSM";
+        status.className = "presale-status success";
+        status.textContent = "Wallet connected! Enter ETH amount and click Buy.";
+        return;
+      } catch (e) {
+        status.className = "presale-status error";
+        status.textContent = "Failed to connect wallet.";
+        return;
+      }
+    }
+
+    const ethVal = parseFloat(document.getElementById("ps-eth-input").value);
+    if (!ethVal || ethVal <= 0) {
+      status.className = "presale-status error";
+      status.textContent = "Please enter a valid ETH amount.";
+      return;
+    }
+
+    try {
+      btn.disabled = true;
+      btn.textContent = "Processing...";
+      status.className = "presale-status";
+      status.textContent = "Confirm the transaction in your wallet...";
+
+      const writeContract = new ethers.Contract(PRESALE_ADDRESS, PRESALE_ABI, signer);
+      const tx = await writeContract.buyOSM({ value: ethers.utils.parseEther(ethVal.toString()) });
+
+      status.className = "presale-status success";
+      status.innerHTML = `Transaction sent! <a href="https://basescan.org/tx/${tx.hash}" target="_blank" style="color:var(--accent)">View on Basescan ↗</a>`;
+      btn.textContent = "Buy OSM";
+
+      tx.wait().then(() => loadPresaleData());
+    } catch (e) {
+      status.className = "presale-status error";
+      status.textContent = (e.code === 4001 || e.code === "ACTION_REJECTED") ? "Transaction cancelled." : "Transaction failed. Please try again.";
+      btn.textContent = "Buy OSM";
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  loadPresaleData();
+  setInterval(loadPresaleData, 30000);
 </script>
 </body>
 </html>
