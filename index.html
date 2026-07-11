@@ -1076,6 +1076,24 @@
         <div class="timer-block"><div class="timer-value" id="t-secs">--</div><div class="timer-label">Secs</div></div>
       </div>
 
+      <!-- Get Base ETH -->
+      <div class="presale-buy-box" style="margin-top:20px;">
+        <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">
+          Don't have ETH on Base yet? Bridge or swap into Base ETH first, then come back to buy below.
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="https://bridge.base.org/deposit" target="_blank" rel="noopener" style="flex:1;min-width:160px;">
+            <button class="btn btn-outline" style="width:100%;">Bridge ETH → Base ↗</button>
+          </a>
+          <a href="https://app.uniswap.org/swap?chain=base" target="_blank" rel="noopener" style="flex:1;min-width:160px;">
+            <button class="btn btn-outline" style="width:100%;">Swap on Base ↗</button>
+          </a>
+        </div>
+        <div class="presale-disclaimer" style="margin-top:12px;">
+          These open official third-party apps (Base's own bridge and Uniswap) in a new tab — this site never holds or routes your funds during a bridge or swap.
+        </div>
+      </div>
+
       <!-- Buy box -->
       <div class="presale-buy-box">
         <div style="font-size:13px;color:var(--muted);margin-bottom:12px;">Enter ETH amount to buy OSM</div>
@@ -1305,9 +1323,73 @@
     return addr.slice(0, 6) + "…" + addr.slice(-4);
   }
 
-  function detectWallet() {
+  async function isOnBase() {
+    try {
+      const chainId = await window.ethereum.request({ method: "eth_chainId" });
+      return chainId === BASE_CHAIN_ID;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function switchToBase() {
+    try {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: BASE_CHAIN_ID }]
+      });
+      return true;
+    } catch (switchErr) {
+      if (switchErr.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{
+              chainId: BASE_CHAIN_ID,
+              chainName: "Base",
+              nativeCurrency: { name: "Ethereum", symbol: "ETH", decimals: 18 },
+              rpcUrls: [BASE_RPC],
+              blockExplorerUrls: ["https://basescan.org"]
+            }]
+          });
+          return true;
+        } catch (addErr) {
+          return false;
+        }
+      }
+      return false;
+    }
+  }
+
+  async function refreshWalletUI() {
     const btn = document.getElementById("ps-buy-btn");
     const status = document.getElementById("ps-status");
+    const accounts = await window.ethereum.request({ method: "eth_accounts" }).catch(() => []);
+
+    if (accounts.length === 0) {
+      walletConnected = false;
+      const walletName = window.ethereum.isMetaMask ? "MetaMask" : "Wallet";
+      btn.textContent = `Connect ${walletName} to Buy`;
+      return;
+    }
+
+    browserProvider = new ethers.providers.Web3Provider(window.ethereum);
+    signer = browserProvider.getSigner();
+    walletConnected = true;
+
+    if (await isOnBase()) {
+      btn.textContent = "Buy OSM";
+      status.className = "presale-status success";
+      status.textContent = `Connected: ${shortAddr(accounts[0])} · Base network`;
+    } else {
+      btn.textContent = "Switch to Base Network";
+      status.className = "presale-status error";
+      status.textContent = `Connected: ${shortAddr(accounts[0])} · Wrong network (switch to Base to buy)`;
+    }
+  }
+
+  function detectWallet() {
+    const btn = document.getElementById("ps-buy-btn");
 
     if (!window.ethereum) {
       btn.textContent = "Install MetaMask";
@@ -1315,45 +1397,11 @@
       return;
     }
 
-    // MetaMask injects window.ethereum.isMetaMask; other wallets (Coinbase, Rabby, etc.)
-    // also inject window.ethereum, so we just confirm *a* wallet is present and label it.
-    const walletName = window.ethereum.isMetaMask ? "MetaMask" : "Wallet";
-    btn.textContent = `Connect ${walletName} to Buy`;
     btn.onclick = presaleBuy;
+    refreshWalletUI();
 
-    // If the site was already authorized in a previous session, the wallet returns
-    // the account here without popping up a prompt — so we can reconnect silently.
-    window.ethereum.request({ method: "eth_accounts" }).then(async (accounts) => {
-      if (accounts.length > 0) {
-        browserProvider = new ethers.providers.Web3Provider(window.ethereum);
-        signer = browserProvider.getSigner();
-        walletConnected = true;
-        btn.textContent = "Buy OSM";
-        status.className = "presale-status success";
-        status.textContent = `Connected: ${shortAddr(accounts[0])}`;
-      }
-    }).catch(() => {});
-
-    // Keep the UI in sync if the user switches or disconnects accounts in the wallet.
-    window.ethereum.on && window.ethereum.on("accountsChanged", (accounts) => {
-      if (accounts.length === 0) {
-        walletConnected = false;
-        btn.textContent = `Connect ${walletName} to Buy`;
-        status.className = "presale-status";
-        status.textContent = "Wallet disconnected.";
-      } else {
-        walletConnected = true;
-        signer = browserProvider.getSigner();
-        btn.textContent = "Buy OSM";
-        status.className = "presale-status success";
-        status.textContent = `Connected: ${shortAddr(accounts[0])}`;
-      }
-    });
-
-    window.ethereum.on && window.ethereum.on("chainChanged", () => {
-      // Wallet UIs recommend a reload on chain switches to avoid stale provider state.
-      window.location.reload();
-    });
+    window.ethereum.on && window.ethereum.on("accountsChanged", refreshWalletUI);
+    window.ethereum.on && window.ethereum.on("chainChanged", refreshWalletUI);
   }
 
   async function loadPresaleData() {
@@ -1418,39 +1466,13 @@
     const btn    = document.getElementById("ps-buy-btn");
     const status = document.getElementById("ps-status");
 
+    // State 1: not connected yet.
     if (!walletConnected) {
       try {
         status.className = "presale-status";
         status.textContent = "Connecting wallet...";
-
-        browserProvider = new ethers.providers.Web3Provider(window.ethereum);
-        await browserProvider.send("eth_requestAccounts", []);
-
-        try {
-          await window.ethereum.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: BASE_CHAIN_ID }]
-          });
-        } catch (switchErr) {
-          if (switchErr.code === 4902) {
-            await window.ethereum.request({
-              method: "wallet_addEthereumChain",
-              params: [{
-                chainId: BASE_CHAIN_ID,
-                chainName: "Base",
-                nativeCurrency: { name: "Ethereum", symbol: "ETH", decimals: 18 },
-                rpcUrls: [BASE_RPC],
-                blockExplorerUrls: ["https://basescan.org"]
-              }]
-            });
-          }
-        }
-
-        signer = browserProvider.getSigner();
-        walletConnected = true;
-        btn.textContent = "Buy OSM";
-        status.className = "presale-status success";
-        status.textContent = "Wallet connected! Enter ETH amount and click Buy.";
+        await window.ethereum.request({ method: "eth_requestAccounts" });
+        await refreshWalletUI();
         return;
       } catch (e) {
         status.className = "presale-status error";
@@ -1459,6 +1481,20 @@
       }
     }
 
+    // State 2: connected but on the wrong chain — never proceed to a buy from here.
+    if (!(await isOnBase())) {
+      status.className = "presale-status";
+      status.textContent = "Switching to Base network...";
+      const switched = await switchToBase();
+      await refreshWalletUI();
+      if (!switched || !(await isOnBase())) {
+        status.className = "presale-status error";
+        status.textContent = "Please switch your wallet to Base network to continue.";
+      }
+      return;
+    }
+
+    // State 3: connected and on Base — proceed to buy.
     const ethVal = parseFloat(document.getElementById("ps-eth-input").value);
     if (!ethVal || ethVal <= 0) {
       status.className = "presale-status error";
