@@ -82,7 +82,7 @@ contract OSMPresale {
         require(!presaleActive, "already active");
         require(
             osmToken.balanceOf(address(this)) >= TOTAL_ALLOCATION,
-            "insufficient OSM balance — fund contract first"
+            "insufficient OSM balance - fund contract first"
         );
 
         presaleActive = true;
